@@ -11,27 +11,29 @@ CREATE TABLE village(id_village SERIAL PRIMARY KEY,
                     );
 
 CREATE TABLE ressource (id_ressource SERIAL PRIMARY KEY, 
-                        nom VARCHAR(255)
+                        nom VARCHAR(255),
+                        nb_max int
                         );
 
 CREATE TABLE batiment (id_village int,
                        id_bat SERIAL PRIMARY KEY, 
-                       niveau int, nb_bat int,
+                       niveau int,
                        nom_bat varchar(255), 
-                       id_ress int, 
+                       id_ress int,
+                       production int,
                        FOREIGN KEY(id_ress) REFERENCES ressource(id_ressource),
                        FOREIGN KEY(id_village) REFERENCES village(id_village)
                       );
 
+CREATE TABLE cout_batiment (id_village int,
+                            nom_bat varchar(255),
+                            cout_
+
+)
+)
+
 CREATE TABLE entrepot (id_village int, 
                        niveau int, 
-                       id_entrepot SERIAL PRIMARY KEY, 
-                       nb_max_bois int, 
-                       nb_max_pierre int,
-                       nb_max_bouphe int,
-                       nb_max_fer int,
-                       nb_max_gueux int,
-                       
                        FOREIGN KEY(id_village) REFERENCES village(id_village)
                       ); 
                       
