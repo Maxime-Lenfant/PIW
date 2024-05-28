@@ -27,10 +27,15 @@ CREATE TABLE batiment (id_village int,
 
 CREATE TABLE cout_batiment (id_village int,
                             nom_bat varchar(255),
-                            cout_
+                            id_ressource int,
+                            cout int,
+                            niveau int,
+                            FOREIGN KEY(id_village) REFERENCES village(id_village),
+                            FOREIGN KEY(id_ress) REFERENCES ressource(id_ressource),
+                            FOREIGN KEY(nom_bat) REFERENCES batiment(nom_bat),
+                            FOREIGN KEY(niveau) REFERENCES batiment(niveau),
+                            );
 
-)
-)
 
 CREATE TABLE entrepot (id_village int, 
                        niveau int, 
