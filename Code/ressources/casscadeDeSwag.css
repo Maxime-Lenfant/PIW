@@ -1,0 +1,37 @@
+
+
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url('bg1.png');
+    background-size: auto;
+    background-repeat: no-repeat; 
+    background-position: top left;
+    height: 2000px; 
+    overflow: auto; 
+}
+
+.topBar{                                                                                     
+    position: sticky;  /* Propriété très importante qui va permettre à la barre de se "coller" en haut de la page lorsque l'on va scroller */
+    position: -webkit-sticky; /*Compatibilité avec safari */
+    top: 5px; /* Définie le haut de la page pour cet élément comme étant à 5 pixel plus bas que l'originale. Cela permet de ne pas avoir la barre de navigation qui soit trop collé au hauut de page */
+    display: grid;
+    grid-template-columns: 7% 55px;
+}
+
+
+#BoutonHome{
+    box-sizing: border-box;
+    display: block;
+    height: 50px;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    align-content: center;
+    border: 2px solid #0F191B;
+    border-radius: 10px;
+}
+
+.topbar1{
+    align-content: center;
+}
