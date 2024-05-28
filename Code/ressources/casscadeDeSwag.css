@@ -35,3 +35,36 @@ body {
 .topbar1{
     align-content: center;
 }
+
+#entrepot{
+    opacity: 100%;
+    margin-left: 840px;
+    margin-top: 350px;
+    position: relative;
+    display: inline-block;
+}
+
+#entrepotIm{
+    width: 150px;
+    height: auto;
+}
+
+.texteInfo {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+  }
+
+.entrepotIm:hover .texteInfo{
+    visibility: visible;
+  }
