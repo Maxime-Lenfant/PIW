@@ -111,22 +111,62 @@ def update_quantite(id_village, id_ressource, quantite):
         "quantite" : quantite
     })
 
-def cost():
+def cost(id_village, id_ressource, cout):
+    sql: str = "SELECT nb_ress FROM stock WHERE id_village = %(id_village)s AND id_ress = %(id_ressource)s; "
+    cr.execute(sql, {
+        "id_village" : id_village,
+        "id_ressource" : id_ressource,
+    })
+    stock = cr.fetchone()
+    if(stock >= cout):
+        stock -= cout
+        update_quantite(id_village, id_ressource, stock)
+
+    
+    # verif de la ressource
+    # retrait de la ressource avec update quantité
+
+    
     pass
 
 def upgrade_entrepot(id_village):
     sql: str = "SELECT niveau FROM entrepot WHERE id_village = %(var)s;"
     cr.execute(sql, {"var": id_village})
     niveau = cr.fetchone()
-    if niveau <18:
-        updateSQL = """UPDATE entrepot SET niveau = %(niveau)s WHERE id_village = %(var)s;
+    if niveau <5:
+        sql = """UPDATE entrepot SET niveau = %(niveau)s WHERE id_village = %(var)s;
                 """
         cr.execute(sql, {
             "var": id_village,
             "niveau" : niveau+1,
             })
-        
+        cost(id_village, id_ressource=0, cout=50)
+        cost(id_village, id_ressource=1, cout=50)
+        cost(id_village, id_ressource=2, cout=20)        
         return True
+    if (niveau >=5) & (niveau < 10) :
+        sql = """UPDATE entrepot SET niveau = %(niveau)s WHERE id_village = %(var)s;
+                """
+        cr.execute(sql, {
+            "var": id_village,
+            "niveau" : niveau+1,
+            })
+        cost(id_village, id_ressource=0, cout=100)
+        cost(id_village, id_ressource=1, cout=100)
+        cost(id_village, id_ressource=2, cout=50)        
+        return True
+    if (niveau >=10) & (niveau <15) :
+        sql = """UPDATE entrepot SET niveau = %(niveau)s WHERE id_village = %(var)s;
+                """
+        cr.execute(sql, {
+            "var": id_village,
+            "niveau" : niveau+1,
+            })
+        cost(id_village, id_ressource=0, cout=300)
+        cost(id_village, id_ressource=1, cout=300)
+        cost(id_village, id_ressource=2, cout=150)        
+        return True
+    
     return False
 
 def create_bat(id_village, nom, id_ressources=None):
@@ -138,10 +178,21 @@ def create_bat(id_village, nom, id_ressources=None):
         "nom_bat": nom,
         "id_ress" : id_ressources, 
     })
+    
+
     #Coute de l'argent
 
     #prod
 
+def set_cout(id_village, nom_batiment, id_ressource, qte):
+    sql:str = """INSERT INTO cout_batiment(id_village, nom_bat, niveau, id_ressource, cout)
+
+    
+    """
+
+
+def construire_bat():
+    pass
 
 resetDB()
 
@@ -152,6 +203,7 @@ if 1:
     create_ressource('bouphe',baseMax+100)
     create_ressource('fer',baseMax-30)
     create_ressource('gens',baseMax+200)
+
 
     create_user("GuerrierTacosMagiqueDemoniaque")
     id_user=get_user('GuerrierTacosMagiqueDemoniaque')
