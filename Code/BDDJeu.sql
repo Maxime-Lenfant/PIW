@@ -16,7 +16,6 @@ CREATE TABLE ressource (id_ressource SERIAL PRIMARY KEY,
                         );
 
 CREATE TABLE batiment (id_village int,
-                       id_bat SERIAL PRIMARY KEY, 
                        niveau int,
                        nom_bat varchar(255), 
                        id_ress int,
@@ -25,15 +24,12 @@ CREATE TABLE batiment (id_village int,
                        FOREIGN KEY(id_village) REFERENCES village(id_village)
                       );
 
-CREATE TABLE cout_batiment (id_village int,
-                            nom_bat varchar(255),
+CREATE TABLE cout_batiment (nom_bat varchar(255),
                             id_ressource int,
                             cout int,
                             niveau int,
-                            FOREIGN KEY(id_village) REFERENCES village(id_village),
                             FOREIGN KEY(id_ress) REFERENCES ressource(id_ressource),
                             FOREIGN KEY(nom_bat) REFERENCES batiment(nom_bat),
-                            FOREIGN KEY(niveau) REFERENCES batiment(niveau),
                             );
 
 
