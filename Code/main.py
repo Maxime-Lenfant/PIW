@@ -216,7 +216,7 @@ def construire_bat(id_village, nom_batiment, prod, id_ressource, niveau=0):
         "id_ress" : id_ressource, 
         "prod" : prod,
     })
-#il n'y a pas de verif pour savoir si on le build ou pas 
+#il n'y a pas de verif pour savoir si on le build ou pas lalalal
 
 
 def update_bat(id_village, nom_batiment, prod, id_ressource, niveau=0):
