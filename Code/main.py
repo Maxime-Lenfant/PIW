@@ -243,12 +243,20 @@ def construire_bat(id_village, nom_batiment, prod, id_ressource, niveau=0):
         sql = """INSERT INTO batiment(id_village, niveau, nom_batiment, id_ress, production)
         VALUES (%(id_village)s, 1, %(nom)s, %(id_ress)s, %(prod)s);
         """
+
         cr.execute(sql,{
             "id_village" : id_village,
             "nom": nom_batiment,
             "id_ress" : id_ressource, 
             "prod" : prod,
         })
+    cr.execute(sql,{
+        "id_village" : id_village,
+        "nom": nom_batiment,
+        "id_ress" : id_ressource, 
+        "prod" : prod,
+    })
+#il n'y a pas de verif pour savoir si on le build ou pas lalalal
 
 def upgrade_bat(id_village, nom_batiment, prod, id_ressource, niveau=0):
     isok = 1
