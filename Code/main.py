@@ -177,7 +177,6 @@ def verif_qte(id_village, nom_batiment, niveau, id_ressource):
     return False
 
 def upgrade_entrepot(id_village):
-    #il manque d'update les ressources max dans la table ressource
     sql: str = "SELECT niveau FROM entrepot WHERE id_village = %(var)s;"
     cr.execute(sql, {"var": id_village})
     niveau = cr.fetchone()
