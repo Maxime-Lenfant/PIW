@@ -1,6 +1,7 @@
-CREATE TABLE utilisateur(id_user SERIAL PRIMARY KEY,
-                        username varchar(255), 
-                        login varchar(255)
+CREATE TABLE utilisateur(id SERIAL PRIMARY KEY,
+                        login TEXT UNIQUE NOT NULL CHECK (login != ''),
+                        password TEXT NOT NULL CHECK (password != ''),
+                        token TEXT
                         );
 
 CREATE TABLE village(id_village SERIAL PRIMARY KEY, 
@@ -11,8 +12,7 @@ CREATE TABLE village(id_village SERIAL PRIMARY KEY,
                     );
 
 CREATE TABLE ressource (id_ressource SERIAL PRIMARY KEY, 
-                        nom VARCHAR(255),
-                        nb_max int
+                        nom VARCHAR(255)
                         );
 
 CREATE TABLE batiment (id_village int,
@@ -42,5 +42,6 @@ CREATE Table stock( id_village int,
                    FOREIGN KEY(id_village) REFERENCES village(id_village), 
                    id_ress int, 
                    FOREIGN KEY(id_ress) REFERENCES ressource(id_ressource), 
-                   nb_ress int
+                   nb_ress int,
+                   nb_max int
                    );
