@@ -158,7 +158,6 @@ def cost(id_village, id_ressource, cout):
     # verif de la ressource
     # retrait de la ressource avec update quantité
 
-    
     pass
 
 def get_cout(nom_batiment, niveau, id_ressource):
