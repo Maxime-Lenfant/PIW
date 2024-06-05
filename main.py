@@ -17,15 +17,15 @@ def index():
 # Si non alors on le redirige sur la page de connexion
         return redirect("/login")
 # Sinon on peux lui renvoyer le contenu de notre page.
-    return render_template("index.html")
+    return render_template("jeusupergenial.html")
 
 @app.route("/login")
 def login():
     return render_template("login.html")
 
-@app.route("/register")
+@app.route("/login")
 def register():
-    return render_template("register.html")
+    return render_template("login.html")
 
 @app.route("/setBDD")
 def setBDD():
