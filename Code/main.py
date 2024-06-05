@@ -4,7 +4,7 @@ import psycopg2
 import random
 import datetime
 
-con = psycopg2.connect(host='localhost', user='dieu', password='OhGodPleaseYes', dbname='flassskkk')
+con = psycopg2.connect(host='localhost', user='dieu', password='OhGodPleaseYes', dbname='piw')
 
 cr = con.cursor()
 
@@ -23,7 +23,7 @@ def index():
 def login():
     return render_template("login.html")
 
-@app.route("/login")
+@app.route("/register")
 def register():
     return render_template("login.html")
 
@@ -48,8 +48,13 @@ def register_auth():
 @app.route("/login/auth", methods=["POST"])
 def login_auth():
 # On note que l'on utilise form dans une requête POST et args dans une requêtes GET
+    print("OH")
+    print(request)
+    print(request.form)
     login: str = request.form["login"]
+    print(login)
     password: str = request.form["password"]
+    """
     hashed_password: str = hash_sha512(password)
     auth_ok: bool = is_crendential_correct(login, hashed_password)
     if auth_ok:
@@ -57,9 +62,9 @@ def login_auth():
         set_token(login, user_token)
         session["token"] = user_token
         return "Auth success !"
-    else:
-        return "Auth failed !"
-        
+    else:"""
+    return render_template("auth.html")
+
 def hash_sha512(value: str) -> str:
     h = hashlib.sha512()
     h.update(value.encode())

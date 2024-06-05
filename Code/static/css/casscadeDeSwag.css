@@ -3,7 +3,7 @@
 #village {
     margin: 0;
     padding: 0;
-    background-image: url('bg1.png');
+    background-image: url('static/images/bg1.png');
     background-size: auto;
     background-repeat: no-repeat; 
     background-position: top left;
