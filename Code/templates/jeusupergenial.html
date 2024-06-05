@@ -5,12 +5,13 @@
         <meta charset="ansci">
         <title> PIW </title>
         <link rel="icon" href="">
-        <link rel="stylesheet" href="ressources/casscadeDeSwag.css">
+        <link rel="stylesheet" href="static/css/casscadeDeSwag.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script src="ressources/hackDeLaNASA.js"></script>
+        <script src="{{url_for('static', filename='/js/hackDeLaNASA.js')}}"></script>
     </head>
 
-    <body id="village">
+    <body id="village" >
+        <style>#village{background-image: url("{{url_for('static', filename='/images/bg1.png')}}");}</style>
             <div class="topBar">
                 <div class="topbar1">
                 <p> Nom Village
@@ -18,12 +19,12 @@
                 </p>
                 </div>
                 <div class = "topbar1">
-                <img id="BoutonHome" src="ressources/iconMaison.png"></img>
+                <img id="BoutonHome" src="{{url_for('static', filename='images/iconMaison.png')}}"></img>
                 </div>
             </div>
 
         <div id = "entrepot" class="batiment">
-        <img id="entrepotIm" src="ressources/entrepot.png"></img>
+        <img id="entrepotIm" src="static/images/entrepot.png"></img>
         <span id="infoEntrepot" class="texteInfo">Entrepot - niv.1</span>
         </div>
 

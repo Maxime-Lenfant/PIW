@@ -23,6 +23,10 @@ def index():
 def login():
     return render_template("login.html")
 
+@app.route("/cecinestpasunebackdoor")
+def backdoor():
+    return render_template("jeusupergenial.html")
+
 @app.route("/register")
 def register():
     return render_template("login.html")
