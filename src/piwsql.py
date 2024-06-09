@@ -5,44 +5,71 @@ con = psycopg2.connect(host='localhost', user='dieu', password='OhGodPleaseYes',
 cr = con.cursor()
 
 def resetDB():
+    """
+    Reset la base de donnée en supprimant toutes les tables et en executant le fichier sql BDDJeu.sql contenu dans le répertoire
+    """
     sql : str = """
         DROP TABLE utilisateur,village,ressource,batiment,entrepot,stock;
     """
     cr.execute(sql)
-    with open('jeu.sql', 'r') as sql_file:
+    with open('BDDJeu.sql', 'r') as sql_file:
         sql_script = sql_file.read()
     cr.execute(sql_script)
 
-def get_user(var:str,):
-    sql: str ="SELECT id_user FROM utilisateur WHERE username = %(var)s;"
+def get_user(username:str,) -> int:
+    """
+    Retourne l'identifiant de l'utilisateur dont le surnom (username) est passé en argument
+    """
+    sql: str ="SELECT id_user FROM utilisateur WHERE username = %(username)s;"
     cr.execute(sql, {   
-        "var" : var
+        "username" : username
     })
     return cr.fetchone()
 
-def create_user(username):
+def create_user(username: str):
+    """
+    Créé un utilisateur avec le surnom passé en argument
+    """
     sql: str = "INSERT INTO utilisateur(username) VALUES (%(username)s);"
     cr.execute(sql,{
         "username": username
     })
 
-def create_ressource(name):
-    sql : str = "INSERT INTO ressource(nom, nb_max) VALUES (%(name)s, %(nb_max)s);"
-    cr.execute(sql,{
-        "name": name,
-    })
-
-def get_nb_ress():
-    sql:str = """SELECT * FROM ressource"""
-    cr.execute(sql,{})
-    return len(cr.fetchall)
-
-def get_id_ressource(nom):
+def get_id_ressource(nom: str) -> int:
+    """
+    Retourne l'identifiant de la ressources nommé en paramètre
+    """
     sql: str ="SELECT id_ressource FROM ressource WHERE nom = %(var)s;"
     cr.execute(sql, {   
         "var" : nom
     })
     return cr.fetchone()
+
+def create_ressource(id_village:int, nom: str, nb_max: int, nb_ress = 0):
+    """
+    Créé une ressource avec pour argument l'indentifiant du village, son nom et son nombre maximum
+    """
+    sql : str = "INSERT INTO ressource(nom) VALUES (%(nom)s);"
+    cr.execute(sql,{
+        "nom": nom
+    })
+    id_ressource = get_id_ressource(nom)
+
+    sql: str = "INSERT INTO stock(id_village, id_ress, nb_ress, nb_max) VALUES (%(id_village)s, %(id_ress)s, %(nb_ress)s, %(nb_max)s); " 
+    cr.execute(sql,{
+        "nb_max": nb_max,
+        "id_village": id_village,
+        "id_ressource":id_ressource,
+        "nb_ress": 0
+    })
+
+def get_nb_ress() -> str:
+    """
+    Retourne le nombre de ressource
+    """
+    sql:str = """SELECT * FROM ressource"""
+    cr.execute(sql,{})
+    return len(cr.fetchall)
 
 def get_stock(id_village, id_ressource):
     sql: str ="""SELECT nb_ress FROM ressource 
@@ -313,6 +340,30 @@ def set_cout(nom_batiment, niveau, id_ressource, qte):
         "cout" : qte,
     })
 
+def add_user(login: str, pwd: str):
+    sql: str = """INSERT INTO users(login, password)
+                VALUES (%(login)s, %(pwd)s);"""
+    cr.execute(sql, {
+        "login" : login,
+        "pwd" : pwd,
+    })
+
+def is_crendential_correct(login: str, hashed_password: str) -> bool:
+    sql: str = """SELECT id, login
+                FROM users
+                WHERE login = %(login)s AND password = %(hashed_password)s;"""
+    cr.execute(sql,{
+        "login" : login,
+        "hashed_password" : hashed_password,
+        })
+    res = cr.fetchall()
+    return len(res) == 1
+    
+def voir():
+    sql: str = """SELECT * FROM users;"""
+    cr.execute(sql, {})
+    a = cr.fetchall()
+    print(a) 
 
 
 resetDB()

@@ -5,14 +5,14 @@
         <meta charset="ansci">
         <title> PIW </title>
         <link rel="icon" href="">
-        <link rel="stylesheet" href="ressources/casscadeDeSwag.css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/casscadeDeSwag.css') }}">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script src="ressources/hackDeLaNASA.js"></script>
+        <script src="{{url_for('static', filename='js/hackDeLaNASA.js') }}" ></script>
     </head>
 
     <body>
         <p>Veuiller patientez, Authentification en cours</p>
-        <img src='static/pecheAuth.png'>
+        <img src="{{url_for('static', filename='images/pecheAuth.png')}}"">
 
     </body>
     <style>

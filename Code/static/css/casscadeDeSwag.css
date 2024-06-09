@@ -74,3 +74,10 @@
     border-radius: 10px;
 }
 
+.cercle{
+        filter: brightness(1); /* Initial brightness filter for demonstration */
+        position: relative;
+        display: inline-block;
+}
+
+

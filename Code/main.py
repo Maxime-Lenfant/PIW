@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, jsonify
 import hashlib
 import psycopg2
 import random
@@ -72,32 +72,7 @@ def login_auth():
 def hash_sha512(value: str) -> str:
     h = hashlib.sha512()
     h.update(value.encode())
-    return h.hexdigest()
-
-def add_user(login: str, pwd: str):
-    sql: str = """INSERT INTO users(login, password)
-                VALUES (%(login)s, %(pwd)s);"""
-    cr.execute(sql, {
-        "login" : login,
-        "pwd" : pwd,
-    })
-
-def is_crendential_correct(login: str, hashed_password: str) -> bool:
-    sql: str = """SELECT id, login
-                FROM users
-                WHERE login = %(login)s AND password = %(hashed_password)s;"""
-    cr.execute(sql,{
-        "login" : login,
-        "hashed_password" : hashed_password,
-        })
-    res = cr.fetchall()
-    return len(res) == 1
-    
-def voir():
-    sql: str = """SELECT * FROM users;"""
-    cr.execute(sql, {})
-    a = cr.fetchall()
-    print(a)    
+    return h.hexdigest()   
 
 def random_number() -> int | float:
     rand: str= random.random()*random.uniform(100,1000)
@@ -135,8 +110,5 @@ def logged_in() -> bool:
         if token_valid:
             return True
     return False
-
-
-
 
 app.run(host="0.0.0.0")
