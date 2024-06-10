@@ -1,24 +1,56 @@
 $(document).ready(function(){
-    $("#infoEntrepot").hide();
-    $("#entrepotIm").hover(function(){
-        $("#infoEntrepot").show();
-      },
-      function(){
-        $("#infoEntrepot").hide();
-      });
-    $("#entrepotIm").click(function(){
-      $("#infoEntrepot").text("Entrepot - niv2");
-    });
+  // Cacher le texte d'info 
+  $(".texteInfo").hide();
 
-    $(".cercle").hover(function(){
-      $(this).css("filter", "brightness(0.5)");
+  // Texte sous l'entrepot
+  $("#entrepotIm").hover(function(){
+      $("#infoEntrepot").show();
     },
     function(){
-      $(this).css("filter", "brightness(1)");
+      $("#infoEntrepot").hide();
     });
+
+  // Changer le texte 
   $("#entrepotIm").click(function(){
     $("#infoEntrepot").text("Entrepot - niv2");
-  });    
+  });
 
+  // Affciher le pop up
+  $(".cercle").hover(function(){
+    $(this).css("filter", "brightness(0.5)");
+  },
+  function(){
+    $(this).css("filter", "brightness(1)");
+  });
+
+  $("#entrepotIm").click(function(){
+    $("#infoEntrepot").text("Entrepot - niv2");
+  });
+  
+
+  $(".cercle").click(function(){
+    $(".popUp").css("display", "block");
+  });
+
+  $("#BoutonCroix").click(function() { 
+    $(".popUp").css("display", "none");
+  });
+
+
+// test ajax post get
+
+$(".cercle").click(function() {
+  $.ajax({
+      url: "/infoBat",
+      type: "GET",
+      data: { "nom_bat" : $(this).attr("id") }, 
+      success: function(response) {
+          $("#titrePopUp").text(response.nom_bat+" niveau 1")
+      },
+      error: function(error) {
+          console.log("PLEURE CHIALE MIAULE SALE FRAUDE", error);
+      }
+  });
+});
   });
 

@@ -70,6 +70,14 @@ def login_auth():
     else:"""
     return render_template("auth.html")
 
+#test route post get
+@app.route('/infoBat', methods=['GET'])
+def get_message():
+    nom_bat = request.args.get('nom_bat')
+    print(nom_bat)
+    
+    return jsonify({'nom_bat': nom_bat})
+
 def hash_sha512(value: str) -> str:
     h = hashlib.sha512()
     h.update(value.encode())

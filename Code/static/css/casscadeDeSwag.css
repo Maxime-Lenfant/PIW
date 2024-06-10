@@ -18,7 +18,7 @@
     top: 5px; /* Définie le haut de la page pour cet élément comme étant à 5 pixel plus bas que l'originale. Cela permet de ne pas avoir la barre de navigation qui soit trop collé au hauut de page */
     display: grid;
     grid-template-columns: 7% 55px;
-    z-index: 10;
+    z-index: 9;
 }
 
 
@@ -40,7 +40,7 @@
     border-radius: 10px;
 }
 
-#entrepot{
+#Entrepot{
     opacity: 100%;
     left: 840px;
     top: 450px;
@@ -82,4 +82,71 @@
         display: inline-block;
 }
 
+#MaisonC{
+    top: 460px;
+    left: 200px;
+    height: auto;
+    width: 330px;
+    position: absolute;
 
+}
+
+#MaisonIm{
+    top: 350px;
+    left: 250px;
+    height: auto;
+    width: 200px;
+    position: absolute;
+}
+
+/* TEST MODAL */
+.popUp {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+  }
+  
+  .ContenuPopUp {
+    margin: auto;
+    display: block;
+    width: 80%;
+    height: 80%;
+    background-color: antiquewhite;
+    border: 2px solid #796700;
+    border-radius: 10px;
+  }
+  
+  @keyframes zoom {
+    from {transform: scale(0.1)} 
+    to {transform: scale(1)}
+  }
+  
+  /* The Close Button */
+  #BoutonCroix {
+    position: absolute;
+    top: 100px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    z-index: 10;
+  }
+  
+  #BoutonCroix:hover,
+  #BoutonCroix:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  #titrePopUp{
+    text-align: center;
+  }
