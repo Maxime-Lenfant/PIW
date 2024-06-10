@@ -12,37 +12,41 @@
 
     <body id="village" >
         <style>#village{background-image: url("{{url_for('static', filename='/images/bg2.png')}}");}</style>
-            <div class="topBar">
-                <div class="topbar1">
-                <p> Nom Village
+        <div id="topBar">
+            <div class="topbar">
+                <p id="playerInfo"> Nom Village
                     Username
                 </p>
-                </div>
-                <div class = "topbar1">
+            </div>
+            <div class = "topbar">
                 <img id="BoutonHome" src="{{url_for('static', filename='images/iconMaison.png')}}"></img>
-                </div>
             </div>
+        </div>
 
-            <div id="Maison" class="cercle">
-            <img id="MaisonC" src="{{url_for('static', filename='images/cercleMaison.png')}}"> 
+        <div id="Maison" class="Batiment">
+            <img class="Cercle" src="{{url_for('static', filename='images/cercleMaison.png')}}"> 
             <img id="MaisonIm"  src="{{url_for('static', filename='images/maison.png') }}">
-            </img>
-            </div>
+        </div>
 
+        <div id="Scierie" class="Batiment">
+            <img class="Cercle" src="{{url_for('static', filename='images/cercleMaison.png')}}"> 
+            <img id="ScierieIm"  src="{{url_for('static', filename='images/scierie.png') }}">
+        </div>
 
-        <div id = "Entrepot" class="cercle">
+        <div id = "Entrepot" class="Batiment">
             <img id="entrepotIm" src="{{url_for('static', filename='images/entrepot.png')}}"></img>
             <span id="infoEntrepot" class="texteInfo">Entrepot - niv.1</span>
         </div>
 
-            <!-- The Modal -->
-    <div id="popUpStat" class="popUp">
-        <span id="BoutonCroix">&times;</span>
-        <div class="ContenuPopUp">
-            <h1 id="titrePopUp">[placeholder nom_batiment-niveau]</h1>
-            <img id="marteau" src="{{url_for('static', filename='') }}">
+    <!-- pop up -->
+        <div id="popUpStat" class="popUp">
+            <span id="BoutonCroix">&times;</span>
+            <div class="ContenuPopUp">
+                <h1 id="titrePopUp">[placeholder nom_batiment-niveau]</h1>
+                <img id="marteau" src="{{url_for('static', filename='') }}">
+            </div>
         </div>
-    </div>
+    <!-- ###### -->
 
     </body>
 </html>

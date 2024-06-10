@@ -72,7 +72,7 @@ def login_auth():
 
 #test route post get
 @app.route('/infoBat', methods=['GET'])
-def get_message():
+def nomBatPopUp():
     nom_bat = request.args.get('nom_bat')
     print(nom_bat)
     

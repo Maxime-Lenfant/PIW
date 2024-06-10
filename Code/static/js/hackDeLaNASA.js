@@ -16,7 +16,7 @@ $(document).ready(function(){
   });
 
   // Affciher le pop up
-  $(".cercle").hover(function(){
+  $(".Batiment").hover(function(){
     $(this).css("filter", "brightness(0.5)");
   },
   function(){
@@ -28,7 +28,7 @@ $(document).ready(function(){
   });
   
 
-  $(".cercle").click(function(){
+  $(".Batiment").click(function(){
     $(".popUp").css("display", "block");
   });
 
@@ -39,7 +39,7 @@ $(document).ready(function(){
 
 // test ajax post get
 
-$(".cercle").click(function() {
+$(".Batiment").click(function() {
   $.ajax({
       url: "/infoBat",
       type: "GET",
