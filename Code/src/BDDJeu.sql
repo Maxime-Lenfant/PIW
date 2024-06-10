@@ -8,7 +8,7 @@ CREATE TABLE village(id_village SERIAL PRIMARY KEY,
                     id_user int,
                     nom_village varchar(255), 
                     nb_bat int,
-                    FOREIGN KEY(id_user) REFERENCES utilisateur(id_user)
+                    FOREIGN KEY(id_user) REFERENCES utilisateur(id)
                     );
 
 CREATE TABLE ressource (id_ressource SERIAL PRIMARY KEY, 
@@ -20,16 +20,17 @@ CREATE TABLE batiment (id_village int,
                        nom_bat varchar(255), 
                        id_ress int,
                        production int,
+                       PRIMARY KEY (id_village, nom_bat),
                        FOREIGN KEY(id_ress) REFERENCES ressource(id_ressource),
                        FOREIGN KEY(id_village) REFERENCES village(id_village)
                       );
 
 CREATE TABLE cout_batiment (nom_bat varchar(255),
-                            id_ressource int,
+                            id_ress int,
                             cout int,
                             niveau int,
                             FOREIGN KEY(id_ress) REFERENCES ressource(id_ressource),
-                            FOREIGN KEY(nom_bat) REFERENCES batiment(nom_bat),
+                            FOREIGN KEY(nom_bat, ) REFERENCES batiment(nom_bat)
                             );
 
 

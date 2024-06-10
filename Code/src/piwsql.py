@@ -12,7 +12,7 @@ def resetDB():
         DROP TABLE utilisateur,village,ressource,batiment,entrepot,stock;
     """
     cr.execute(sql)
-    with open('BDDJeu.sql', 'r') as sql_file:
+    with open('src/BDDJeu.sql', 'r') as sql_file:
         sql_script = sql_file.read()
     cr.execute(sql_script)
 
@@ -366,9 +366,7 @@ def voir():
     print(a) 
 
 
-resetDB()
-
-if 1:
+if 0:
     baseMax = 50
     create_ressource('bois', baseMax)
     create_ressource('pierre',baseMax)

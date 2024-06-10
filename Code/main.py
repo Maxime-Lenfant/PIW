@@ -3,6 +3,7 @@ import hashlib
 import psycopg2
 import random
 import datetime
+import src.piwsql as piwsql
 
 con = psycopg2.connect(host='localhost', user='dieu', password='OhGodPleaseYes', dbname='piw')
 
@@ -33,7 +34,7 @@ def register():
 
 @app.route("/setBDD")
 def setBDD():
-    with open('BDDlogin.sql', 'r') as sql_file:
+    with open('src/BDDlogin.sql', 'r') as sql_file:
         sql_script = sql_file.read()
     cr.execute(sql_script)
     return redirect("/register")
@@ -46,7 +47,7 @@ def register_auth():
     hashed_password: str = hash_sha512(password)
     print(f"login = {login}, password = {password}, hashed_password = {hashed_password}")
     
-    add_user(login, hashed_password)
+    piwsql.add_user(login, hashed_password)
     return redirect("/login")
 
 @app.route("/login/auth", methods=["POST"])
@@ -95,7 +96,7 @@ def token_for(login: str) -> str:
 def set_token(login: str, token: str):
     sql: str = """UPDATE users SET token = %(token)s WHERE login = %(login)s"""
     cr.execute(sql, {"token" : token, "login" : login})
-    voir()
+    piwsql.voir()
 
 def check_token_validity(token: str) -> bool:
     sql: str = """SELECT * FROM users WHERE token = %(token)s"""
@@ -111,4 +112,4 @@ def logged_in() -> bool:
             return True
     return False
 
-app.run(host="0.0.0.0")
+app.run(host="0.0.0.0", debug=True)

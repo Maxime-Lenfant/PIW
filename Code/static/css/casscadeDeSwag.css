@@ -8,7 +8,8 @@
     background-repeat: no-repeat; 
     background-position: top left;
     height: 2000px; 
-    overflow: auto; 
+    overflow: auto;
+    position: relative; 
 }
 
 .topBar{                                                                                     
@@ -17,6 +18,7 @@
     top: 5px; /* Définie le haut de la page pour cet élément comme étant à 5 pixel plus bas que l'originale. Cela permet de ne pas avoir la barre de navigation qui soit trop collé au hauut de page */
     display: grid;
     grid-template-columns: 7% 55px;
+    z-index: 10;
 }
 
 
@@ -41,8 +43,8 @@
 #entrepot{
     opacity: 100%;
     left: 840px;
-    top: 380px;
-    position: relative;
+    top: 450px;
+    position: absolute;
     display: inline-block;
 }
 
@@ -76,7 +78,7 @@
 
 .cercle{
         filter: brightness(1); /* Initial brightness filter for demonstration */
-        position: relative;
+        position: absolute;
         display: inline-block;
 }
 
