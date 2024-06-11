@@ -9,7 +9,7 @@ def resetDB():
     Reset la base de donnée en supprimant toutes les tables et en executant le fichier sql BDDJeu.sql contenu dans le répertoire
     """
     sql : str = """
-        DROP TABLE utilisateur,village,ressource,batiment,entrepot,stock;
+        DROP TABLE utilisateur,village,ressource,batiment,liste_baiment,cout_batiment,entrepot,stock;
     """
     cr.execute(sql)
     with open('src/BDDJeu.sql', 'r') as sql_file:
@@ -26,13 +26,14 @@ def get_user(username:str,) -> int:
     })
     return cr.fetchone()
 
-def create_user(username: str):
+def create_user(login, password):
     """
     Créé un utilisateur avec le surnom passé en argument
     """
-    sql: str = "INSERT INTO utilisateur(username) VALUES (%(username)s);"
+    sql: str = "INSERT INTO utilisateur(username, password) VALUES (%(username)s, %(password)s);"
     cr.execute(sql,{
-        "username": username
+        "username": login,
+        "password" : password,
     })
 
 def get_id_ressource(nom: str) -> int:
@@ -45,22 +46,13 @@ def get_id_ressource(nom: str) -> int:
     })
     return cr.fetchone()
 
-def create_ressource(id_village:int, nom: str, nb_max: int, nb_ress = 0):
+def create_ressource(nom: str):
     """
-    Créé une ressource avec pour argument l'indentifiant du village, son nom et son nombre maximum
+    Créé une ressource avec pour argument son nom, elle est commune a toute la BDD
     """
     sql : str = "INSERT INTO ressource(nom) VALUES (%(nom)s);"
     cr.execute(sql,{
         "nom": nom
-    })
-    id_ressource = get_id_ressource(nom)
-
-    sql: str = "INSERT INTO stock(id_village, id_ress, nb_ress, nb_max) VALUES (%(id_village)s, %(id_ress)s, %(nb_ress)s, %(nb_max)s); " 
-    cr.execute(sql,{
-        "nb_max": nb_max,
-        "id_village": id_village,
-        "id_ressource":id_ressource,
-        "nb_ress": 0
     })
 
 def get_nb_ress() -> str:
@@ -99,7 +91,7 @@ def update_stock_max(id_village, id_ressource, nb_max):
     })
 
 def create_village(user_id, name): 
-    sql :str = """INSERT INTO village(id_user, nom_village, nb_bat) VALUES (%(user_id)s,%(name)s,1);
+    sql :str = """INSERT INTO village(id_user, nom_village) VALUES (%(user_id)s,%(name)s);
     INSERT INTO entrepot(niveau)
     VALUES(0);
     SELECT id_village FROM village;
@@ -112,18 +104,16 @@ def create_village(user_id, name):
     selection = cr.fetchone()
 
     sql ="""INSERT INTO stock(id_village,id_ress,nb_ress) 
-            VALUES (%(selection)s,%(bois)s,50),
-            (%(selection)s,%(pierre)s,50),
-            (%(selection)s,%(bouphe)s,50),
-            (%(selection)s,%(fer)s,0),
-            (%(selection)s,%(gens)s,10);
+            VALUES (%(selection)s,%(bois)s,500),
+            (%(selection)s,%(pierre)s,500),
+            (%(selection)s,%(bouphe)s,500),
+            (%(selection)s,%(gens)s,100);
         """
     cr.execute(sql,{
         "selection" : selection,
         "pierre" : get_id_ressource('pierre'),
         "bois" : get_id_ressource('bois'),
         "bouphe" : get_id_ressource('bouphe'),
-        "fer" : get_id_ressource('fer'),
         "gens" : get_id_ressource('gens')
     })
 
@@ -214,9 +204,9 @@ def upgrade_entrepot(id_village):
             "var": id_village,
             "niveau" : niveau+1,
             })
-        cost(id_village, id_ressource=0, cout=50)
-        cost(id_village, id_ressource=1, cout=50)
-        cost(id_village, id_ressource=2, cout=20)
+        cost(id_village, get_id_ressource("bois"), cout=50)
+        cost(id_village, get_id_ressource("pierre"), cout=50)
+        cost(id_village, get_id_ressource("bouphe"), cout=20)
         for i in range(1,get_nb_ress()+1):
             update_stock_max(i,(get_stock_max(id_village, i)*1.2)+10)        
         return True
@@ -284,13 +274,12 @@ def construire_bat(id_village, nom_batiment, prod, id_ressource, niveau=0):
     })
 #il n'y a pas de verif pour savoir si on le build ou pas lalalal
 
-def upgrade_bat(id_village, nom_batiment, prod, id_ressource, niveau=0):
+def upgrade_bat(id_village, nom_batiment):
     isok = 1
     fdata = {
         "nom" : nom_batiment,
         "niveau" : niveau,
         "id_village" : id_village,
-        "id_ress" : id_ressource, 
         "prod" : prod,
         "new_niveau" : niveau+1,
     }
@@ -308,22 +297,21 @@ def upgrade_bat(id_village, nom_batiment, prod, id_ressource, niveau=0):
         sql: str = """SELECT niveau FROM batiment 
                 WHERE id_village = %(id_village)s AND nom_bat = %(nom)s;
                 """
-    cr.execute(sql,fdata)
-    niveau = cr.fetchone()
-    prod = 5*(niveau+1)+10
-    sql = """UPDATE batiment SET niveau = %(new_niveau)s AND production = %(prod)s
-        WHERE id_village = %(id_village)s AND nom_bat = %(nom_batiment)s;
-        """
-    cr.execute(sql,fdata)
+        cr.execute(sql,fdata)
+        niveau = cr.fetchone()
+        prod = 5*(niveau+1)+10
+        sql = """UPDATE batiment SET niveau = %(new_niveau)s AND production = %(prod)s
+            WHERE id_village = %(id_village)s AND nom_bat = %(nom_batiment)s;
+            """
+        cr.execute(sql,fdata)
 
 #create_bat et set_cout sont utile pour la creation de la BDD pas pdt le jeu
-def create_bat(id_village, nom, id_ressources=None):
+def create_bat(nom, id_ressources=None):
     #créé les templates des batiments
-    sql = """INSERT INTO batiment(id_village, niveau, nom_batiment, id_ress,)
-        VALUES (%(id_village)s, 1, %(nom_bat)s, %(id_ress)s);
+    sql = """INSERT INTO liste_batiment(nom_bat, id_ress,)
+        VALUES (%(nom_bat)s, %(id_ress)s);
         """
     cr.execute(sql,{
-        "id_village" : id_village,
         "nom_bat": nom,
         "id_ress" : id_ressources, 
     })
@@ -338,14 +326,6 @@ def set_cout(nom_batiment, niveau, id_ressource, qte):
         "niveau" : niveau, 
         "id_ress" : id_ressource,
         "cout" : qte,
-    })
-
-def add_user(login: str, pwd: str):
-    sql: str = """INSERT INTO users(login, password)
-                VALUES (%(login)s, %(pwd)s);"""
-    cr.execute(sql, {
-        "login" : login,
-        "pwd" : pwd,
     })
 
 def is_crendential_correct(login: str, hashed_password: str) -> bool:
