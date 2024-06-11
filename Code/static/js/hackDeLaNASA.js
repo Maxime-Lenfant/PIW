@@ -10,6 +10,16 @@ $(document).ready(function(){
       $("#infoEntrepot").hide();
     });
 
+    // Texte sous les icones de ressources
+    /*
+    $(".hoverAble").hover(function(){
+      $(this).append("<span class="texteInfo">Peons</span>");
+    },
+    function(){
+      $("#infoEntrepot").hide();
+    });
+*/
+
   // Changer le texte 
   $("#entrepotIm").click(function(){
     $("#infoEntrepot").text("Entrepot - niv2");
@@ -29,11 +39,11 @@ $(document).ready(function(){
   
 
   $(".Batiment").click(function(){
-    $(".popUp").css("display", "block");
+    $("#popUpStat").css("display", "block");
   });
 
   $("#BoutonCroix").click(function() { 
-    $(".popUp").css("display", "none");
+    $("#popUpStat").css("display", "none");
   });
 
 

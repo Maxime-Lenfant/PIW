@@ -17,7 +17,7 @@
     position: -webkit-sticky; 
     top: 5px; 
     display: grid;
-    grid-template-columns: 7% 55px;
+    grid-template-columns: 7% 55px auto 400px;
     z-index: 9;
 }
 
@@ -38,6 +38,30 @@
     background-color: rgb(211, 197, 119);
     border: 2px solid #796700;
     border-radius: 10px;
+}
+
+#heure{
+  color: aliceblue;
+  text-align: center;
+}
+
+#ressources{
+  align-content: center;
+  display: grid;
+  grid-template-columns: 10% 10% 10% 10%;
+  font-size: 20px;
+}
+
+.iconeRessource{
+  display: block;
+  width: 100%;
+}
+
+.nbRessources{
+  
+  text-align: justify;
+  padding-top: 10px;
+  color: aliceblue;
 }
 
 
@@ -121,16 +145,16 @@
 
 /* pop Up */
 .popUp {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    padding-top: 100px; 
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.5);
   }
   
   .ContenuPopUp {

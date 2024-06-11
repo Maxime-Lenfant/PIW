@@ -21,15 +21,24 @@
             <div class = "topbar">
                 <img id="BoutonHome" src="{{url_for('static', filename='images/iconMaison.png')}}"></img>
             </div>
+            <div class = "topBar"> <h1 id="heure" > [heure]</h1> </div>
+            <div id="ressources" class = "topBar">
+                <img class="iconeRessource" id="Peons" src="{{url_for('static', filename='images/iconePnj.png')}}">
+                <span id="nbGens" class="nbRessources"> 104 </span>
+                
+                <img class="iconeRessource" class="hoverAble" id="Bouphe" src="{{url_for('static', filename='images/iconeBouphe.png')}}">
+                <span id="nbBouphe" class="nbRessources"> 18 </span>
+
+            </div>
         </div>
 
         <div id="Maison" class="Batiment">
-            <img class="Cercle" src="{{url_for('static', filename='images/cercleMaison.png')}}"> 
+            <img class="Cercle" src="{{url_for('static', filename='images/cerclemaison.png')}}"> 
             <img id="MaisonIm"  src="{{url_for('static', filename='images/maison.png') }}">
         </div>
 
         <div id="Scierie" class="Batiment">
-            <img class="Cercle" src="{{url_for('static', filename='images/cercleMaison.png')}}"> 
+            <img class="Cercle" src="{{url_for('static', filename='images/cerclemaison.png')}}"> 
             <img id="ScierieIm"  src="{{url_for('static', filename='images/scierie.png') }}">
         </div>
 
