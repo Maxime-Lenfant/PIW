@@ -196,6 +196,7 @@ def paye(id_village, nom_batiment, niveau, id_ressource):
         return True
     return False
 
+#uniquement pour l'entrepot
 def cost(id_village, id_ressource, cout):
     sql: str = "SELECT nb_ress FROM stock WHERE id_village = %(id_village)s AND id_ress = %(id_ressource)s; "
     cr.execute(sql, {
