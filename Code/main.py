@@ -12,6 +12,9 @@ cr = con.cursor()
 app = Flask(__name__)
 app.secret_key = 'the random string'
 
+batimentOuvert : str = ""
+villageOuvert : int = ""
+
 @app.route("/")
 def index():
     if not logged_in():
@@ -75,8 +78,21 @@ def login_auth():
 def nomBatPopUp():
     nom_bat = request.args.get('nom_bat')
     print(nom_bat)
+    batimentOuvert = nom_bat
+    return jsonify({'nom_bat': nom_bat, "niveau_bat": niveau_bat})
+
+@app.route('/ameliorerBat', methods=['GET'])
+def ameliorerBat():
+    batimentOuvert = request.args.get("batimentOuvert")
+    if piwsql.upgrade_bat(batimentOuvert) == True:
+        return jsonify({'ameliore':True,'nom_bat':batimentOuvert,"niveau_bat":niveau_bat})
+    else :
+        return jsonify({'ameliore':False,'nom_bat':batimentOuvert,"niveau_bat":niveau_bat})
     
-    return jsonify({'nom_bat': nom_bat})
+@app.route('/infoRessources', methods=['GET'])
+def infoRessources():
+    piwsql.get_stock(villageOuvert,"Gens")
+
 
 def hash_sha512(value: str) -> str:
     h = hashlib.sha512()

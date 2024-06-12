@@ -304,6 +304,8 @@ def upgrade_bat(id_village, nom_batiment):
             WHERE id_village = %(id_village)s AND nom_bat = %(nom_batiment)s;
             """
         cr.execute(sql,fdata)
+        return True
+    return False
 
 #create_bat et set_cout sont utile pour la creation de la BDD pas pdt le jeu
 def create_bat(nom, id_ressources=None):
