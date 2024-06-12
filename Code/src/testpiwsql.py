@@ -34,4 +34,5 @@ if 1:
     piw.upgrade_bat(piw.get_village_id("CracklandCity"),"scierie")
 
     piw.show_village_summary(piw.get_village_id("CracklandCity"))
-
+    print("azeaze")
+    print(piw.get_stock(piw.get_village_id("CracklandCity"), piw.get_id_ressource("bois")))

@@ -3,7 +3,7 @@ $(document).ready(function(){
   // Cacher le texte d'info 
   $(".texteInfo").hide();
 
-  actualiseRessources();
+
 
   function actualiseRessources(){
     $.ajax({
@@ -21,6 +21,7 @@ $(document).ready(function(){
       }
   });
   }
+  actualiseRessources();
 
   // Texte sous l'entrepot
   $("#entrepotIm").hover(function(){
@@ -98,6 +99,20 @@ $("#ameliorer").click(function() {
         else{
           alert("les ressources sont insuffisantes")
         }
+      },
+      error: function(error) {
+          console.log("PLEURE CHIALE MIAULE SALE FRAUDE", error);
+      }
+  });
+});
+
+$("#marteau").click(function() {
+  $.ajax({
+      url: "/obtenirRessources",
+      type: "GET",
+      data: {"batimentOuvert": batimentOuvert}, 
+      success: function(response) {
+        actualiseRessources();
       },
       error: function(error) {
           console.log("PLEURE CHIALE MIAULE SALE FRAUDE", error);

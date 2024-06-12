@@ -12,7 +12,7 @@ def resetDB():
         DROP TABLE utilisateur,village,ressource,batiment,liste_batiment,cout_batiment,entrepot,stock;
     """
     cr.execute(sql)
-    with open('BDDJeu.sql', 'r') as sql_file:
+    with open('src/BDDJeu.sql', 'r') as sql_file:
         sql_script = sql_file.read()
     cr.execute(sql_script)
 
@@ -83,6 +83,7 @@ def get_stock(id_village, id_ressource):
         "id_ressource": id_ressource,
     })
     res = cr.fetchone()[0]
+    
     return res
 
 def get_stock_max(id_village, id_ressource):
@@ -326,8 +327,8 @@ def upgrade_bat(id_village, nom_batiment):
             WHERE id_village = %(id_village)s AND nom_bat = %(nom)s;
             """
         cr.execute(sql,fdata)
-        return True
-    return False
+        return (True, new_niveau)
+    return (False, niveau)
 
 #create_bat et set_cout sont utile pour la creation de la BDD pas pdt le jeu
 def create_bat(nom, id_ressources=None):

@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.secret_key = 'the random string'
 
 batimentOuvert : str = ""
-villageOuvert : int = ""
+villageOuvert : int = piwsql.get_village_id("CracklandCity")
 
 @app.route("/")
 def index():
@@ -79,19 +79,21 @@ def nomBatPopUp():
     nom_bat = request.args.get('nom_bat')
     print(nom_bat)
     batimentOuvert = nom_bat
-    return jsonify({'nom_bat': nom_bat, "niveau_bat": niveau_bat})
+    return jsonify({'nom_bat': nom_bat, "niveau_bat": 1})
 
 @app.route('/ameliorerBat', methods=['GET'])
 def ameliorerBat():
     batimentOuvert = request.args.get("batimentOuvert")
-    if piwsql.upgrade_bat(batimentOuvert) == True:
-        return jsonify({'ameliore':True,'nom_bat':batimentOuvert,"niveau_bat":niveau_bat})
+    temp = piwsql.upgrade_bat(villageOuvert,batimentOuvert)
+    if  temp[0] == True:
+        return jsonify({'ameliore':True,'nom_bat':batimentOuvert,"niveau_bat":temp[1]})
     else :
-        return jsonify({'ameliore':False,'nom_bat':batimentOuvert,"niveau_bat":niveau_bat})
+        return jsonify({'ameliore':False,'nom_bat':batimentOuvert,"niveau_bat":temp[1]})
     
 @app.route('/infoRessources', methods=['GET'])
 def infoRessources():
-    piwsql.get_stock(villageOuvert,"Gens")
+    return jsonify({'nbGens':piwsql.get_stock(villageOuvert,piwsql.get_id_ressource("Gens")),'nbKayou':piwsql.get_stock(villageOuvert,piwsql.get_id_ressource("Kayou")),"nbBois":piwsql.get_stock(villageOuvert,piwsql.get_id_ressource("Bois")),"nbBouphe": piwsql.get_stock(villageOuvert,piwsql.get_id_ressource("Bouphe"))})
+
 
 
 def hash_sha512(value: str) -> str:
@@ -135,5 +137,31 @@ def logged_in() -> bool:
         if token_valid:
             return True
     return False
+
+if 1:
+    piwsql.resetDB()
+    piwsql.create_ressource("bois")
+    piwsql.create_ressource("pierre")
+    piwsql.create_ressource("bouphe")
+    piwsql.create_ressource("gens")
+ 
+    piwsql.create_bat("scierie",piwsql.get_id_ressource("bois"))
+    piwsql.create_bat("carriere",piwsql.get_id_ressource("pierre"))
+    piwsql.create_bat("wadko",piwsql.get_id_ressource("bouphe"))
+    piwsql.create_bat("maison",piwsql.get_id_ressource("gens"))
+
+    piwsql.set_cout("scierie", 1, piwsql.get_id_ressource("bois"), 50)
+    piwsql.set_cout("scierie", 1, piwsql.get_id_ressource("pierre"), 5)
+    piwsql.set_cout("maison", 1, piwsql.get_id_ressource("bois"), 20)
+    piwsql.set_cout("maison", 1, piwsql.get_id_ressource("pierre"), 20)
+    piwsql.set_cout("scierie", 2, piwsql.get_id_ressource("bois"), 75)
+    piwsql.set_cout("scierie", 2, piwsql.get_id_ressource("pierre"), 25)
+    piwsql.set_cout("scierie", 2, piwsql.get_id_ressource("bouphe"), 5)
+
+    piwsql.create_user("toto","1234")
+
+    piwsql.create_village(piwsql.get_user("toto"),"CracklandCity")
+    piwsql.show_village_summary(piwsql.get_village_id("CracklandCity"))
+
 
 app.run(host="0.0.0.0", debug=True)
