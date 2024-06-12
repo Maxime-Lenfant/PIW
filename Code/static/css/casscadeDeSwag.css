@@ -48,7 +48,7 @@
 #ressources{
   align-content: center;
   display: grid;
-  grid-template-columns: 10% 10% 10% 10%;
+  grid-template-columns: 10% 10% 10% 10% 10% 10% 10% 10%;
   font-size: 20px;
 }
 
@@ -192,6 +192,19 @@
 
   #titrePopUp{
     text-align: center;
+  }
+
+  .boutonsPopUp{
+    position: absolute;
+    bottom: 200px;
+    margin-left: 15px;
+    height: 100px;
+    background-color: chocolate;
+    border-radius: 10px;
+  }
+
+  #ameliorer{
+    margin-left: 130px;
   }
 
   /* ################# */
