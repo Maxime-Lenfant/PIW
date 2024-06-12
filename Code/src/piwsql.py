@@ -9,10 +9,10 @@ def resetDB():
     Reset la base de donnée en supprimant toutes les tables et en executant le fichier sql BDDJeu.sql contenu dans le répertoire
     """
     sql : str = """
-        DROP TABLE utilisateur,village,ressource,batiment,liste_baiment,cout_batiment,entrepot,stock;
+        DROP TABLE utilisateur,village,ressource,batiment,liste_batiment,cout_batiment,entrepot,stock;
     """
     cr.execute(sql)
-    with open('src/BDDJeu.sql', 'r') as sql_file:
+    with open('BDDJeu.sql', 'r') as sql_file:
         sql_script = sql_file.read()
     cr.execute(sql_script)
 
@@ -20,9 +20,9 @@ def get_user(username:str,) -> int:
     """
     Retourne l'identifiant de l'utilisateur dont le surnom (username) est passé en argument
     """
-    sql: str ="SELECT id_user FROM utilisateur WHERE username = %(username)s;"
+    sql: str ="SELECT id FROM utilisateur WHERE login = %(login)s;"
     cr.execute(sql, {   
-        "username" : username
+        "login" : username
     })
     return cr.fetchone()
 
@@ -30,9 +30,9 @@ def create_user(login, password):
     """
     Créé un utilisateur avec le surnom passé en argument
     """
-    sql: str = "INSERT INTO utilisateur(username, password) VALUES (%(username)s, %(password)s);"
+    sql: str = "INSERT INTO utilisateur(login, password) VALUES (%(login)s, %(password)s);"
     cr.execute(sql,{
-        "username": login,
+        "login": login,
         "password" : password,
     })
 
@@ -44,7 +44,19 @@ def get_id_ressource(nom: str) -> int:
     cr.execute(sql, {   
         "var" : nom
     })
-    return cr.fetchone()
+    res = cr.fetchone()[0]
+    return res
+
+def get_ress_prod(nom: str) -> int:
+    """
+    Retourne l'identifiant de la ressources nommé en paramètre
+    """
+    sql: str ="SELECT id_ress FROM liste_batiment WHERE nom_bat = %(var)s;"
+    cr.execute(sql, {   
+        "var" : nom
+    })
+    res = cr.fetchone()[0]
+    return res
 
 def create_ressource(nom: str):
     """
@@ -61,25 +73,27 @@ def get_nb_ress() -> str:
     """
     sql:str = """SELECT * FROM ressource"""
     cr.execute(sql,{})
-    return len(cr.fetchall)
+    return len(cr.fetchall())
 
 def get_stock(id_village, id_ressource):
-    sql: str ="""SELECT nb_ress FROM ressource 
-                WHERE id_village = %(id_village)s AND id_ressource = %(id_ressource)s;"""
+    sql: str ="""SELECT nb_ress FROM stock 
+                WHERE id_village = %(id_village)s AND id_ress = %(id_ressource)s;"""
     cr.execute(sql, {   
         "id_village" : id_village,
         "id_ressource": id_ressource,
     })
-    return cr.fetchone()
+    res = cr.fetchone()[0]
+    return res
 
 def get_stock_max(id_village, id_ressource):
-    sql: str ="""SELECT nb_max FROM ressource 
-                WHERE id_village = %(id_village)s AND id_ressource = %(id_ressource)s;"""
+    sql: str ="""SELECT nb_max FROM stock 
+                WHERE id_village = %(id_village)s AND id_ress = %(id_ressource)s;"""
     cr.execute(sql, {   
         "id_village" : id_village,
         "id_ressource": id_ressource,
     })
-    return cr.fetchone()
+    res = cr.fetchone()[0]
+    return res
 
 def update_stock_max(id_village, id_ressource, nb_max):
     
@@ -87,13 +101,11 @@ def update_stock_max(id_village, id_ressource, nb_max):
     cr.execute(sql, {
         "id_village" : id_village,
         "id_ressource" : id_ressource,
-        "quantite" : nb_max,
+        "nb_max" : nb_max,
     })
 
 def create_village(user_id, name): 
     sql :str = """INSERT INTO village(id_user, nom_village) VALUES (%(user_id)s,%(name)s);
-    INSERT INTO entrepot(niveau)
-    VALUES(0);
     SELECT id_village FROM village;
     """
     cr.execute(sql, {
@@ -103,11 +115,15 @@ def create_village(user_id, name):
 
     selection = cr.fetchone()
 
-    sql ="""INSERT INTO stock(id_village,id_ress,nb_ress) 
-            VALUES (%(selection)s,%(bois)s,500),
-            (%(selection)s,%(pierre)s,500),
-            (%(selection)s,%(bouphe)s,500),
-            (%(selection)s,%(gens)s,100);
+
+    sql ="""INSERT INTO entrepot(id_village,niveau)
+        VALUES(%(selection)s, 1);
+    
+        INSERT INTO stock(id_village,id_ress,nb_ress,nb_max) 
+            VALUES (%(selection)s,%(bois)s,500,1000),
+            (%(selection)s,%(pierre)s,500,1000),
+            (%(selection)s,%(bouphe)s,500,1000),
+            (%(selection)s,%(gens)s,100,100);
         """
     cr.execute(sql,{
         "selection" : selection,
@@ -147,7 +163,7 @@ def show_village_summary(village_id):
     cr.execute(sql, {
         "village_id": village_id,
     })
-    batiment = cr.fetchone()
+    batiment = cr.fetchall()
     print(batiment)
 
 def update_quantite(id_village, id_ressource, quantite):
@@ -159,13 +175,34 @@ def update_quantite(id_village, id_ressource, quantite):
         "quantite" : quantite
     })
 
+def get_cout(nom_batiment, niveau, id_ressource):
+    sql:str = """SELECT cout FROM cout_batiment 
+                 WHERE nom_bat = %(nom_batiment)s AND niveau = %(niveau)s AND id_ress = %(id_ressource)s
+                 """
+    cr.execute(sql,{
+        "nom_batiment": nom_batiment, 
+        "niveau" : niveau, 
+        "id_ressource": id_ressource
+        })
+    res = cr.fetchone()[0]
+    return res
+
+def paye(id_village, nom_batiment, niveau, id_ressource):
+    stock = get_stock(id_village, id_ressource)
+    cout = get_cout(nom_batiment,niveau,id_ressource)
+    if stock >= cout:
+        stock -= cout
+        update_quantite(id_village, id_ressource, stock)
+        return True
+    return False
+
 def cost(id_village, id_ressource, cout):
     sql: str = "SELECT nb_ress FROM stock WHERE id_village = %(id_village)s AND id_ress = %(id_ressource)s; "
     cr.execute(sql, {
         "id_village" : id_village,
         "id_ressource" : id_ressource,
     })
-    stock = cr.fetchone()
+    stock = cr.fetchone()[0]
     if(stock >= cout):
         stock -= cout
         update_quantite(id_village, id_ressource, stock)
@@ -175,29 +212,12 @@ def cost(id_village, id_ressource, cout):
     # verif de la ressource
     # retrait de la ressource avec update quantité
 
-    pass
-
-def get_cout(nom_batiment, niveau, id_ressource):
-    sql:str = """SELCT cout FROM cout_batiment 
-                 WHERE nom_batiment = %(nom_batiment)s AND niveau = %(niveau)s AND id_ressource = %(id_ressource)s
-                 """
-    cr.execute(sql,{
-        "nom_batiment": nom_batiment, 
-        "niveau" : niveau, 
-        "id_ressource": id_ressource
-        })
-    return cr.fetchone()
-
-def verif_qte(id_village, nom_batiment, niveau, id_ressource):
-    if get_stock(id_village, id_ressource) > get_cout(nom_batiment,niveau,id_ressource):
-        return True
-    return False
-
 def upgrade_entrepot(id_village):
     sql: str = "SELECT niveau FROM entrepot WHERE id_village = %(var)s;"
     cr.execute(sql, {"var": id_village})
-    niveau = cr.fetchone()
-    if niveau <5:
+    niveau = cr.fetchone()[0]
+    print(niveau)
+    if niveau < 5:
         sql = """UPDATE entrepot SET niveau = %(niveau)s WHERE id_village = %(var)s;
                 """
         cr.execute(sql, {
@@ -208,9 +228,9 @@ def upgrade_entrepot(id_village):
         cost(id_village, get_id_ressource("pierre"), cout=50)
         cost(id_village, get_id_ressource("bouphe"), cout=20)
         for i in range(1,get_nb_ress()+1):
-            update_stock_max(i,(get_stock_max(id_village, i)*1.2)+10)        
+            update_stock_max(id_village, i,(get_stock_max(id_village, i)*1.2)+10)        
         return True
-    if (niveau >=5) & (niveau < 10) :
+    if (niveau >= 5) & (niveau < 10) :
         sql = """UPDATE entrepot SET niveau = %(niveau)s WHERE id_village = %(var)s;
                 """
         cr.execute(sql, {
@@ -239,9 +259,11 @@ def upgrade_entrepot(id_village):
     
     return False
 
-def construire_bat(id_village, nom_batiment, prod, id_ressource, niveau=0):
-    isok = 1
-    sql: str = """ SELECT id_ressource, cout, niveau FROM cout_batiment 
+def construire_bat(id_village, nom_batiment, niveau=0):
+    #selection des ressources et de leur quantite 
+    # la fonction cost recupere sans parametres la qte de ressource du bat en fonction du lvl
+    # et se charge de verifier et payer
+    sql: str = """ SELECT id_ress, niveau FROM cout_batiment 
             WHERE nom_bat = %(nom)s AND niveau = %(niveau)s;
             """
     cr.execute(sql,{
@@ -249,66 +271,65 @@ def construire_bat(id_village, nom_batiment, prod, id_ressource, niveau=0):
         "niveau" : niveau,
     })
     cout_total = cr.fetchall()
-    for i in range(len(cout_total)):
-        if verif_qte(id_village,nom_batiment,niveau,i) == False:
-            isok = 0
-    if isok == 1:
-        for i in range(len(cout_total)):
-            cost(id_village,cout_total[0][i],cout_total[1][i])
-        prod = 5*niveau+10
-        sql = """INSERT INTO batiment(id_village, niveau, nom_batiment, id_ress, production)
-        VALUES (%(id_village)s, 1, %(nom)s, %(id_ress)s, %(prod)s);
-        """
 
-        cr.execute(sql,{
-            "id_village" : id_village,
-            "nom": nom_batiment,
-            "id_ress" : id_ressource, 
-            "prod" : prod,
-        })
+    for i in range(len(cout_total)):
+        paye(id_village, nom_batiment, niveau, cout_total[0][i])
+
+    prod = 5*niveau+10
+
+    sql = """INSERT INTO batiment(id_village, niveau, nom_bat, id_ress, production)
+    VALUES (%(id_village)s, 1, %(nom)s, %(id_ress)s, %(prod)s);
+    """
     cr.execute(sql,{
         "id_village" : id_village,
         "nom": nom_batiment,
-        "id_ress" : id_ressource, 
+        "id_ress" : get_ress_prod(nom_batiment), 
         "prod" : prod,
     })
-#il n'y a pas de verif pour savoir si on le build ou pas lalalal
+
 
 def upgrade_bat(id_village, nom_batiment):
-    isok = 1
+    #recupere le niveau actuel du batiment
+    sql: str = """SELECT niveau FROM batiment 
+                WHERE id_village = %(id_village)s AND nom_bat = %(nom)s;
+                """
+    cr.execute(sql,{"id_village" : id_village,
+                    "nom" : nom_batiment,})
+    niveau = cr.fetchone()[0]
+    new_niveau = niveau + 1
+    prod = 5*(new_niveau)+10
     fdata = {
         "nom" : nom_batiment,
         "niveau" : niveau,
         "id_village" : id_village,
         "prod" : prod,
-        "new_niveau" : niveau+1,
+        "new_niveau" : new_niveau,
     }
-    sql: str = """ SELECT id_ressource, cout, niveau FROM cout_batiment 
+    #selection des ressources et de leur quantite 
+    # la fonction cost recupere sans parametres la qte de ressource du bat en fonction du lvl
+    # et se charge de verifier et payer
+    sql: str = """ SELECT id_ress, niveau FROM cout_batiment 
             WHERE nom_bat = %(nom)s AND niveau = %(niveau)s;
             """
-    cr.execute(sql,fdata)
+    cr.execute(sql,{
+        "nom" : nom_batiment,
+        "niveau" : niveau,
+    })
     cout_total = cr.fetchall()
+
     for i in range(len(cout_total)):
-        if verif_qte(id_village,nom_batiment,niveau,i) == False:
-            isok = 0
-    if isok == 1:
-        for i in range(cout_total.size()):
-            cost(id_village,cout_total[0][i],cout_total[1][i])
-        sql: str = """SELECT niveau FROM batiment 
-                WHERE id_village = %(id_village)s AND nom_bat = %(nom)s;
-                """
-        cr.execute(sql,fdata)
-        niveau = cr.fetchone()
-        prod = 5*(niveau+1)+10
-        sql = """UPDATE batiment SET niveau = %(new_niveau)s AND production = %(prod)s
-            WHERE id_village = %(id_village)s AND nom_bat = %(nom_batiment)s;
+        paye(id_village, nom_batiment, niveau, cout_total[0][i])
+
+
+        sql = """UPDATE batiment SET niveau = %(new_niveau)s, production = %(prod)s
+            WHERE id_village = %(id_village)s AND nom_bat = %(nom)s;
             """
         cr.execute(sql,fdata)
 
 #create_bat et set_cout sont utile pour la creation de la BDD pas pdt le jeu
 def create_bat(nom, id_ressources=None):
     #créé les templates des batiments
-    sql = """INSERT INTO liste_batiment(nom_bat, id_ress,)
+    sql = """INSERT INTO liste_batiment(nom_bat, id_ress)
         VALUES (%(nom_bat)s, %(id_ress)s);
         """
     cr.execute(sql,{
@@ -318,8 +339,8 @@ def create_bat(nom, id_ressources=None):
 
 def set_cout(nom_batiment, niveau, id_ressource, qte):
     #sert a set up les couts des upgrades de batiments (1 ligne par ressource) de manière generale (pas par village)
-    sql:str = """INSERT INTO cout_batiment(id_village, nom_bat, niveau, id_ressource, cout)
-            VALUES(%(nom_bat)s,%(niveau)s %(id_ress)s,%(cout)s);
+    sql:str = """INSERT INTO cout_batiment(nom_bat, niveau, id_ress, cout)
+            VALUES(%(nom_bat)s,%(niveau)s ,%(id_ress)s,%(cout)s);
             """
     cr.execute(sql,{
         "nom_bat": nom_batiment,

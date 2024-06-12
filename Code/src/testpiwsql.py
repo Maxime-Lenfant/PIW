@@ -25,10 +25,11 @@ if 1:
     piw.create_user("toto","1234")
 
     piw.create_village(piw.get_user("toto"),"CracklandCity")
+    piw.show_village_summary(piw.get_village_id("CracklandCity"))
 
     piw.upgrade_entrepot(piw.get_village_id("CracklandCity"))
-    piw.construire_bat(piw.get_village_id("CracklandCity"),"maison",5,piw.get_id_ressource("gens"),0)
-    piw.construire_bat(piw.get_village_id("CracklandCity"),"scierie",5,piw.get_id_ressource("bois"),0)
+    piw.construire_bat(piw.get_village_id("CracklandCity"),"maison")
+    piw.construire_bat(piw.get_village_id("CracklandCity"),"scierie")
 
     piw.upgrade_bat(piw.get_village_id("CracklandCity"),"scierie")
 
