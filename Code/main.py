@@ -138,7 +138,7 @@ def logged_in() -> bool:
             return True
     return False
 
-if 1:
+if 0:
     piwsql.resetDB()
     piwsql.create_ressource("bois")
     piwsql.create_ressource("pierre")

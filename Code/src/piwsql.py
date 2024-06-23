@@ -9,7 +9,7 @@ def resetDB():
     Reset la base de donnée en supprimant toutes les tables et en executant le fichier sql BDDJeu.sql contenu dans le répertoire
     """
     sql : str = """
-        DROP TABLE utilisateur,village,ressource,batiment,liste_batiment,cout_batiment,entrepot,stock;
+        DROP TABLE utilisateur,village,ressource,batiment,entrepot,stock;
     """
     cr.execute(sql)
     with open('src/BDDJeu.sql', 'r') as sql_file:
